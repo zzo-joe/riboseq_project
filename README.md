@@ -1,7 +1,7 @@
 # S6K-Pygo2 project 
-| Title | Authors |  |
-:----------|:-------------|:----------|
-| Title here | Authors here | DOI here|
+| Title | Authors | DOI | GEO |
+:----------|:-------------|:----------|:----------|
+| Title here | Authors here | DOI here| GEO here |
 
 ## Example Table
 
