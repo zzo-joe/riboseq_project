@@ -1,1 +1,1 @@
-# riboseq_project
+# S6K-Pygo2 project 
