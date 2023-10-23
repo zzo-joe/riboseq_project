@@ -56,9 +56,12 @@ sapply(Biopkg, require, character.only = TRUE)
 
 ## Read in countdata
 
+deltaTE paper: [Chotani et al., 2019](https://doi.org/10.1002/cpmb.108)
+
+Explaination credit: [SGDDNB github](https://github.com/SGDDNB/translational_regulation)
+
 Calculating differential translation genes (DTGs) requires the count matrices from Ribo-seq and RNA-seq. These should be the raw counts obtained from feature counts or any other tool for counting reads, they should not be normalized or batch corrected. It also requires a sample information file which should be in the same order as samples in the count matrices. It should include information on sequencing type, treatment, batch or any other covariate you need to model.
 
-Explaination credit: [Chotani et al., 2019](https://doi.org/10.1002/cpmb.108)
 
 Countdata should look like table below
 
@@ -167,4 +170,40 @@ sampleinfo <- as.data.frame(cbind(SampleID = SampleID,
                                   Condition = Condition,
                                   SeqType = SeqType))
 ```
+
+Detecting differential translation regulation using DESeq2 by following code:
+
+```r
+ddsMat <- DESeqDataSetFromMatrix(countData = merge,
+                                 colData = coldata, design =~ Condition + SeqType + Condition:SeqType)
+
+ddsMat$SeqType = relevel(ddsMat$SeqType,"RNA")
+ddsMat <- DESeq(ddsMat)
+resultsNames(ddsMat)
+
+##> resultsNames(ddsMat)
+## [1] "Intercept"               "Condition_KD_vs_CTRL"   
+## [3] "SeqType_RIBO_vs_RNA"     "ConditionKD.SeqTypeRIBO"
+
+```
+
+
+Choose the term you want to look at from resultsNames(ddsMat). 
+ConditionKD.SeqTypeRIBO means Changes in Ribo-seq levels in KD vs CTRL accounting for changes in RNA-seq levels in KD vs CTRL.
+This case, changes in riboseq in KD vs. CTRL accounting for changes in RNA seq levels
+
+```r
+res <- results(ddsMat, contrast=list("ConditionKD.SeqTypeRIBO"))
+summary(res)
+
+length(which(res$padj < 0.05))
+write.table(rownames(res)[which(res$padj < 0.05)],
+            "DTEGs.txt",
+            quote=F, sep="\t", col.names = F, row.names = F)
+
+res_df <- data.frame(res)
+```
+
+
+
 
