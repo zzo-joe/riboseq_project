@@ -53,3 +53,118 @@ if (length(Biopkg.new)) {
 sapply(Biopkg, require, character.only = TRUE)
 ```
 
+
+## Read in countdata
+
+Calculating differential translation genes (DTGs) requires the count matrices from Ribo-seq and RNA-seq. These should be the raw counts obtained from feature counts or any other tool for counting reads, they should not be normalized or batch corrected. It also requires a sample information file which should be in the same order as samples in the count matrices. It should include information on sequencing type, treatment, batch or any other covariate you need to model.
+
+Explaination credit: [Chotani et al., 2019](https://doi.org/10.1002/cpmb.108)
+
+Countdata should look like table below
+
+Ribo-seq count matrix (RPFs): 
+
+ | Gene ID | Sample 1 | Sample 2 | Sample 3 | Sample 4 |
+ | --------|----------|----------|----------|----------|
+ | Gene 1  | 1290     | 130      | 2	   | 1000     |
+ | Gene 2  | 2	     | 10	| 5	   | 1	      |
+ | ..	  |	     | 		|	   |	      |	
+ | ..	  |	     | 		|	   |	      |	
+ | ..	  |	     | 		|	   |	      |	
+ | ..	  |	     | 		|	   |	      |	
+ | Gene Z  | 200	     | 140	| 15	   | 11	      |
+
+
+RNA-seq count matrix (mRNA counts): 
+
+ | Gene ID | Sample 5 | Sample 6 | Sample 7 | Sample 8 |
+ | --------|----------|----------|----------|----------|
+ | Gene 1  | 1290     | 130      | 2	   | 1000     |
+ | Gene 2  | 2	     | 10	| 5	   | 1	      |
+ | ..	  |	     | 		|	   |	      |	
+ | ..	  |	     | 		|	   |	      |	
+ | ..	  |	     | 		|	   |	      |	
+ | ..	  |	     | 		|	   |	      |	
+ | Gene Z  | 200	     | 140	| 15	   | 11	      |
+
+ We obtained countdata table by following code:
+
+```r
+## Import riboseq featurecounts results
+countdata <- read.table(file.path("~/Documents/riboseq/2023_Pygo2_KD_Mitosis_riboseq_featurecounts.txt"),
+                        header = TRUE,
+                        check.names = TRUE,
+                        row.names = 1)
+
+# 3 by 3 comparison
+sample <- c("RPF2a", "RPF2b","RPF2c", 
+            "RPF35a", "RPF35b", "RPF35c")
+siRNA <- c("RPF", "RPF", "RPF", 
+           "RPF35", "RPF35","RPF35")
+control <- c("control", "control", "control",
+             "siRNA", "siRNA","siRNA")
+
+colnames(countdata) <- sample
+
+ribo <- countdata
+
+
+## Import rnaseq featurecounts results
+countdata <- read.table(file.path("~/Documents/riboseq/2023_S6K_Pygo2_eIF3D_RNAseq_Featurecounts.txt"),
+                        header = TRUE,
+                        check.names = TRUE,
+                        row.names = 1)
+# 3 by 3 comparison
+sample <- c("RNA21", "RNA22","RNA23", 
+            "RNA35a", "RNA35b", "RNA35c")
+siRNA <- c("RNA", "RNA","RNA",
+           "RNA35", "RNA35","RNA35")
+control <- c("control", "control","control",
+             "siRNA", "siRNA","siRNA")
+
+colnames(countdata) <- sample
+
+rna <- countdata
+
+# merge ribo and rna count data
+merge <- cbind(ribo,rna)
+```
+
+Next, we also need to prepare a also requires a sample information file which should follow the same sample order as count matrices. This file outlines the condition, sequencing type and batch for each sample. This script requires the same header names as shown below (case sensitive). 
+
+Sample information file:
+
+ | SampleID | Condition | SeqType |
+ | --------|----------|----------|
+ | RPF2a  | 1     | RIBO      |
+ | RPF2b  | 1     | RIBO      |
+ | RPF2c  | 1     | RIBO      |
+ | RPF35a | 2     | RIBO      |
+ | RPF35b | 2     | RIBO      |
+ | RPF35c | 2     | RIBO      | 
+ | RNA21  | 1     | RNA      |
+ | RNA22  | 1     | RNA      |
+ | RNA23  | 1     | RNA      |
+ | RNA35a | 2     | RNA      |
+ | RNA35b | 2     | RNA      |
+ | RNA35c | 2     | RNA      |
+
+ We obtained sample information table by following code:
+ 
+```r
+SampleID <- c("RPF2a", "RPF2b","RPF2c", 
+              "RPF35a", "RPF35b", "RPF35c",
+              "RNA21", "RNA22","RNA23",
+              "RNA35a", "RNA35b", "RNA35c")
+
+Condition <- c("CTRL", "CTRL", "CTRL", "KD", "KD", "KD",
+               "CTRL", "CTRL", "CTRL", "KD", "KD", "KD")
+
+SeqType <- c("RIBO", "RIBO", "RIBO", "RIBO", "RIBO", "RIBO",
+             "RNA", "RNA", "RNA", "RNA", "RNA", "RNA")
+
+sampleinfo <- as.data.frame(cbind(SampleID = SampleID,
+                                  Condition = Condition,
+                                  SeqType = SeqType))
+```
+
