@@ -8,8 +8,7 @@ author: "Daeho Joe"
 * Demonstrate the processing using ([dealtaTE](https://github.com/SGDDNB/translational_regulation)).
 
 * Adaptor sequences were removed and aligned to contanimants using Bowtie2 following manufacturer's protocol.
-
-  See [LACEseq bioIT guidelines](https://immaginabiotech.com/storage/2022/10/24/378bdb72845722f9db650562abadf0981d57f5f3.pdf)
+See [LACEseq bioIT guidelines](https://immaginabiotech.com/storage/2022/10/24/378bdb72845722f9db650562abadf0981d57f5f3.pdf)
 
 * Cleaned output were aligned and counted by procotol as described previously.
   See [deltaTE Support Protocol](https://currentprotocols.onlinelibrary.wiley.com/doi/full/10.1002/cpmb.108#cpmb108-prot-0003)
