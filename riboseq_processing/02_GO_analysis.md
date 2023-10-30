@@ -10,9 +10,8 @@ author: "Daeho Joe, Seunghee Jung"
 
 ## ClusterProfiler
 
-clusterProfiler supports over-representation test and gene set enrichment analysis of Gene Ontology.   
--- [Guangchuang Yu](https://guangchuangyu.github.io/)
+With clusterProfiler you can explore functional characteristics of both coding and non-coding genomics data for thousands of species with up-to-date gene annotation. (Introduction by [YuLab](https://github.com/YuLab-SMU/clusterProfiler))
 
-We applied GO analysis on every gene set (exclusive, buffered, intensified, ) on biological process.
+We applied clusterProfiler GO analysis on every gene set (exclusive, buffered, intensified, ) on biological process.
 
-We found out that 
+
