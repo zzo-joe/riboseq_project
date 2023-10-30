@@ -205,5 +205,127 @@ res_df <- data.frame(res)
 ```
 
 
+DESeq2 object with batch for Ribo-seq
 
+```r
+ind = which(coldata$SeqType == "RIBO")
+coldata_ribo = coldata[ind,]
+ddsMat_ribo <- DESeq(ddsMat_ribo)
+res_ribo <- results(ddsMat_ribo, contrast=c("Condition","KD","CTRL"))
+res_ribo <- lfcShrink(ddsMat_ribo, coef=2,res=res_ribo,type="apeglm")
+```
+
+
+DESeq2 object with batch for RNA-seq
+
+```r
+ind = which(coldata$SeqType == "RNA")
+coldata_rna = coldata[ind,]
+ddsMat_rna <- DESeq(ddsMat_rna)
+res_rna <- results(ddsMat_rna, contrast=c("Condition","KD","CTRL"))
+res_rna <- lfcShrink(ddsMat_rna, coef=2,type="apeglm",res=res_rna)
+```
+
+For further analysis, classify genes as follow
+
+```r
+system("mkdir gene_lists")
+forwarded = rownames(res)[which(res$padj > 0.05 & res_ribo$padj < 0.05 & res_rna$padj < 0.05)]
+write.table(forwarded,"gene_lists/forwarded.txt",quote=F,sep="\t",col.names = F,row.names = F)
+
+exclusive = rownames(res)[which(res$padj < 0.05 & res_ribo$padj < 0.05 & res_rna$padj > 0.05)]
+write.table(exclusive,"gene_lists/exclusive.txt",quote=F,sep="\t",col.names = F,row.names = F)
+
+both = which(res$padj < 0.05 & res_ribo$padj < 0.05 & res_rna$padj < 0.05)
+neither = which(res$padj >= 0.05 & res_ribo$padj >= 0.05 & res_rna$padj >= 0.05)
+
+intensified = rownames(res)[both[which(res[both,2]*res_rna[both,2] > 0)]]
+write.table(intensified,"gene_lists/intensified.txt",quote=F,sep="\t",col.names = F,row.names = F)
+
+buffered = rownames(res)[both[which(res[both,2]*res_rna[both,2] < 0)]]
+buffered = c(rownames(res)[which(res$padj < 0.05 & res_ribo$padj > 0.05 & res_rna$padj < 0.05)],buffered)
+write.table(buffered,"gene_lists/buffered.txt",quote=F,sep="\t",col.names = F,row.names = F)
+```
+
+Generated gene class will be plotted with following code
+
+```r
+plot(y=res_ribo[,2],x=res_rna[,2],
+     xlab = "RNA-seq log2 fold change",
+     ylab = "Ribo-seq log2 fold change",
+     asp=1,pch=16,
+     col=rgb(128/255,128/255,128/255,0.1),
+     ylim=c(-6,6),
+     xlim=c(-6,6),
+     cex=0.4)
+
+abline(a=0,b=1,col="gray")
+abline(h=0,v=0,col="gray")
+
+points(y=res_ribo[intensified,2],x=res_rna[intensified,2],pch=16,col="#CBC7B1")
+points(y=res_ribo[buffered,2],x=res_rna[buffered,2],pch=16,col="#C39B6B")
+points(y=res_ribo[forwarded,2],x=res_rna[forwarded,2],pch=16,col="#8AB0A2")
+points(y=res_ribo[exclusive,2],x=res_rna[exclusive,2],pch=16,col="#021B4E")
+
+
+legend("topleft",
+       c("Forwarded","Exclusive","Buffered", "Intensified"),
+       fill=c("#8AB0A2", "#021B4E", "#C39B6B", "#CBC7B1"),
+       cex=1, border = NA, bty="n")
+```
+
+To find out gene profiles, we plotted with following code
+
+```r
+par(mfrow=c(2,2))
+
+goi = forwarded[1]
+y_u = max(res[goi,2],res_ribo[goi,2], res_rna[goi,2],0)
+y_l = min(res[goi,2],res_ribo[goi,2], res_rna[goi,2],0)
+plot(c(1,2),c(0,res[goi,2]),type="l",col="#AA4A44",xaxt="n",
+     xlab="Conditions",ylim=c(y_l,y_u),ylab="Log2 Fold Change", 
+     main="Forwarded gene")
+lines(c(1,2),c(0,res_ribo[goi,2]),col="#BFBA9F")
+lines(c(1,2),c(0,res_rna[goi,2]),col="#011640")
+axis(1,at=c(1,2),labels=c("CTRL","KD"),las=1)
+legend("bottomleft",c("mRNA","RPF","TE"), fill=c("#011640","#BFBA9F","#AA4A44"),
+       cex=1, border = NA, bty="n")
+
+goi = exclusive[1]
+y_u = max(res[goi,2],res_ribo[goi,2], res_rna[goi,2],0)
+y_l = min(res[goi,2],res_ribo[goi,2], res_rna[goi,2],0)
+plot(c(1,2),c(0,res[goi,2]),type="l",col="#AA4A44",xaxt="n",
+     xlab="Conditions",ylim=c(y_l,y_u),ylab="Log2 Fold Change", 
+     main="Exclusive gene")
+lines(c(1,2),c(0,res_ribo[goi,2]),col="#BFBA9F")
+lines(c(1,2),c(0,res_rna[goi,2]),col="#011640")
+axis(1,at=c(1,2),labels=c("CTRL","KD"),las=1)
+legend("bottomleft",c("mRNA","RPF","TE"), fill=c("#011640","#BFBA9F","#AA4A44"),
+       cex=1, border = NA, bty="n")
+
+goi = buffered[1]
+y_u = max(res[goi,2],res_ribo[goi,2], res_rna[goi,2],0)
+y_l = min(res[goi,2],res_ribo[goi,2], res_rna[goi,2],0)
+plot(c(1,2),c(0,res[goi,2]),type="l",col="#AA4A44",xaxt="n",
+     xlab="Conditions",ylim=c(y_l,y_u),ylab="Log2 Fold Change", 
+     main="Buffered gene")
+lines(c(1,2),c(0,res_ribo[goi,2]),col="#BFBA9F")
+lines(c(1,2),c(0,res_rna[goi,2]),col="#011640")
+axis(1,at=c(1,2),labels=c("CTRL","KD"),las=1)
+legend("bottomleft",c("mRNA","RPF","TE"), fill=c("#011640","#BFBA9F","#AA4A44"),
+       cex=1, border = NA, bty="n")
+
+goi = intensified[1]
+y_u = max(res[goi,2],res_ribo[goi,2], res_rna[goi,2],0)
+y_l = min(res[goi,2],res_ribo[goi,2], res_rna[goi,2],0)
+plot(c(1,2),c(0,res[goi,2]),type="l",col="#AA4A44",xaxt="n",
+     xlab="Conditions",ylim=c(y_l,y_u),ylab="Log2 Fold Change", 
+     main="Intensified gene")
+lines(c(1,2),c(0,res_ribo[goi,2]),col="#BFBA9F")
+lines(c(1,2),c(0,res_rna[goi,2]),col="#011640")
+axis(1,at=c(1,2),labels=c("CTRL","KD"),las=1)
+legend("bottomleft",c("mRNA","RPF","TE"), fill=c("#011640","#BFBA9F","#AA4A44"),
+       cex=1, border = NA, bty="n")
+
+```
 
