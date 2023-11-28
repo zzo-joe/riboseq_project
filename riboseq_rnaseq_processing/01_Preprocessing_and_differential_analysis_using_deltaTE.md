@@ -1,5 +1,5 @@
 ---
-title: "riboseq project: reprocessing_and_differential_analysis_using_customized_deltaTE"
+title: "riboseq project: Preprocessing and differential analysis using customized deltaTE"
 author: "Daeho Joe"
 ---
 
