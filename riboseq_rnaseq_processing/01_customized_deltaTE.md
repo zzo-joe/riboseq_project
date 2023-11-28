@@ -11,9 +11,7 @@ author: "Daeho Joe"
 See [LACEseq bioIT guidelines](https://immaginabiotech.com/storage/2022/10/24/378bdb72845722f9db650562abadf0981d57f5f3.pdf)
 
 * Cleaned output were aligned and counted by procotol as described previously.
-  See [deltaTE Support Protocol](https://currentprotocols.onlinelibrary.wiley.com/doi/full/10.1002/cpmb.108#cpmb108-prot-0003)
-
-* 
+  See [deltaTE Support Protocol](https://currentprotocols.onlinelibrary.wiley.com/doi/full/10.1002/cpmb.108#cpmb108-prot-0003)  
 
 ## Installation prerequisites
 
@@ -53,6 +51,10 @@ if (length(Biopkg.new)) {
 sapply(Biopkg, require, character.only = TRUE)
 ```
 
+## Preprocessing
+We trimmed our raw **riboseq data** fastq files following manufacturer’s guide(https://immaginabiotech.com/product/laceseq-12-rxns, LACEseq bioIT guidelines). Reads were processed using Cutadapt(version 2.8), UMI-tools(version 1.1.4), and were trimmed from the 3’ end of each read and only reads longer than X+9 were retrieved. The processed sequences were first mapped to the contaminants using bowtie2 with parameters “—un”, which is composed of PhiX genom([GenBank accession J02482.1](https://www.ncbi.nlm.nih.gov/nuccore/J02482.1)), predicted tRNA genes ([GtRNAdb](http://gtrnadb.ucsc.edu/genomes/eukaryota/Hsapi38/Hsapi38-seq.html)), lncRNA transcripts ([Gencode](https://www.gencodegenes.org/human/)), rRNA repeat units ([GenBank accession U13369.1](https://www.ncbi.nlm.nih.gov/nuccore/U13369.1)) and all sequences for ribosomal RNA of human (retrieved from Rfam 11.0 of the Wellcome Trust Sanger Institute). Reads not mapped to the genes above were used for following analysis.  
+
+Trimmed riboseq data and raw RNA-seq data were mapped to human genome GRCh38 using STAR (v2.7.10b) following [deltaTE Support Protocol](https://currentprotocols.onlinelibrary.wiley.com/doi/full/10.1002/cpmb.108#cpmb108-prot-0003). Aligned reads were sorted by samtools(v1.10) followed by quantification using featureCounts(v2.0.0).
 
 ## Read in countdata
 
@@ -62,35 +64,7 @@ Explaination credit: [SGDDNB github](https://github.com/SGDDNB/translational_reg
 
 Calculating differential translation genes (DTGs) requires the count matrices from Ribo-seq and RNA-seq. These should be the raw counts obtained from feature counts or any other tool for counting reads, they should not be normalized or batch corrected. It also requires a sample information file which should be in the same order as samples in the count matrices. It should include information on sequencing type, treatment, batch or any other covariate you need to model.
 
-
-Countdata should look like table below
-
-Ribo-seq count matrix (RPFs): 
-
- | Gene ID | Sample 1 | Sample 2 | Sample 3 | Sample 4 |
- | --------|----------|----------|----------|----------|
- | Gene 1  | 1290     | 130      | 2	   | 1000     |
- | Gene 2  | 2	     | 10	| 5	   | 1	      |
- | ..	  |	     | 		|	   |	      |	
- | ..	  |	     | 		|	   |	      |	
- | ..	  |	     | 		|	   |	      |	
- | ..	  |	     | 		|	   |	      |	
- | Gene Z  | 200	     | 140	| 15	   | 11	      |
-
-
-RNA-seq count matrix (mRNA counts): 
-
- | Gene ID | Sample 5 | Sample 6 | Sample 7 | Sample 8 |
- | --------|----------|----------|----------|----------|
- | Gene 1  | 1290     | 130      | 2	   | 1000     |
- | Gene 2  | 2	     | 10	| 5	   | 1	      |
- | ..	  |	     | 		|	   |	      |	
- | ..	  |	     | 		|	   |	      |	
- | ..	  |	     | 		|	   |	      |	
- | ..	  |	     | 		|	   |	      |	
- | Gene Z  | 200	     | 140	| 15	   | 11	      |
-
- We obtained countdata table by following code:
+We obtained countdata table from featureCounts output by following code:
 
 ```r
 ## Import riboseq featurecounts results
