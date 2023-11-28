@@ -10,9 +10,27 @@ author: "Daeho Joe, Seunghee Jung"
 
 ## GO Analysis  
 We applied GO analysis using both clusterProfiler and enrichR on every gene that foldchange exceeds 1 or less than 1. We found useful terms in category of biological process and visualized them using dotplot and chorddiagram.  
-
-#### For dotplot, we used follosing code.
-
+#### Prerequisites
+```r
+require("BiocManager")
+require("remotes")
+require("ggplot2")
+require("ggrepel")
+require("dplyr")
+require("tibble")
+require("grid")
+require("gridBase")
+require("magrittr")
+require("viridis")
+require("clusterProfiler")
+require("org.Hs.eg.db")
+require("circlize")
+require("ComplexHeatmap")
+require("enrichplot"
+require("scales")
+require("ggsci")
+```
+#### For dotplot, we used follosing code  
 ```r
 # enrichR result
 GO_combined <- read_tsv("~/Documents/riboseq/enrichR/results.txt")
