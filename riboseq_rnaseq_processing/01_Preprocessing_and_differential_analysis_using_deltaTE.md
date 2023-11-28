@@ -5,7 +5,7 @@ author: "Daeho Joe"
 
 ## Aim:
 
-* Demonstrate the processing using ([dealtaTE](https://github.com/SGDDNB/translational_regulation)).
+* Demonstrate the processing using [`dealtaTE`](https://github.com/SGDDNB/translational_regulation).
 
 * Adaptor sequences were removed and aligned to contanimants using Bowtie2 following manufacturer's protocol.   
 See [LACEseq bioIT guidelines](https://immaginabiotech.com/storage/2022/10/24/378bdb72845722f9db650562abadf0981d57f5f3.pdf)
@@ -52,9 +52,9 @@ sapply(Biopkg, require, character.only = TRUE)
 ```
 
 ## Preprocessing
-We trimmed our raw **riboseq data** fastq files following manufacturer’s guide(https://immaginabiotech.com/product/laceseq-12-rxns, LACEseq bioIT guidelines). Reads were processed using Cutadapt(version 2.8), UMI-tools(version 1.1.4), and were trimmed from the 3’ end of each read and only reads longer than X+9 were retrieved. The processed sequences were first mapped to the contaminants using bowtie2 with parameters “—un”, which is composed of PhiX genom([GenBank accession J02482.1](https://www.ncbi.nlm.nih.gov/nuccore/J02482.1)), predicted tRNA genes ([GtRNAdb](http://gtrnadb.ucsc.edu/genomes/eukaryota/Hsapi38/Hsapi38-seq.html)), lncRNA transcripts ([Gencode](https://www.gencodegenes.org/human/)), rRNA repeat units ([GenBank accession U13369.1](https://www.ncbi.nlm.nih.gov/nuccore/U13369.1)) and all sequences for ribosomal RNA of human (retrieved from Rfam 11.0 of the Wellcome Trust Sanger Institute). Reads not mapped to the genes above were used for following analysis.  
+We trimmed our raw `riboseq data` fastq files following manufacturer’s guide(https://immaginabiotech.com/product/laceseq-12-rxns, LACEseq bioIT guidelines). Reads were processed using Cutadapt(version 2.8), UMI-tools(version 1.1.4), and were trimmed from the 3’ end of each read and only reads longer than X+9 were retrieved. The processed sequences were first mapped to the contaminants using bowtie2 with parameters “—un”, which is composed of PhiX genom([GenBank accession J02482.1](https://www.ncbi.nlm.nih.gov/nuccore/J02482.1)), predicted tRNA genes ([GtRNAdb](http://gtrnadb.ucsc.edu/genomes/eukaryota/Hsapi38/Hsapi38-seq.html)), lncRNA transcripts ([Gencode](https://www.gencodegenes.org/human/)), rRNA repeat units ([GenBank accession U13369.1](https://www.ncbi.nlm.nih.gov/nuccore/U13369.1)) and all sequences for ribosomal RNA of human (retrieved from Rfam 11.0 of the Wellcome Trust Sanger Institute). Reads not mapped to the genes above were used for following analysis.  
 
-Trimmed riboseq data and raw RNA-seq data were mapped to human genome GRCh38 using STAR (v2.7.10b) following [deltaTE Support Protocol](https://currentprotocols.onlinelibrary.wiley.com/doi/full/10.1002/cpmb.108#cpmb108-prot-0003). Aligned reads were sorted by samtools(v1.10) followed by quantification using featureCounts(v2.0.0).
+`Trimmed riboseq data and raw RNA-seq data` were mapped to human genome GRCh38 using STAR (v2.7.10b) following [deltaTE Support Protocol](https://currentprotocols.onlinelibrary.wiley.com/doi/full/10.1002/cpmb.108#cpmb108-prot-0003). Aligned reads were sorted by samtools(v1.10) followed by quantification using featureCounts(v2.0.0).
 
 ## Read in countdata
 
