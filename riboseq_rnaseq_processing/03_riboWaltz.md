@@ -119,9 +119,9 @@ for (sp in c("RPF2a","RPF2b", "RPF2c", "RPF35a","RPF35b", "RPF35c")){
   cu_barplot <- codon_usage_psite(reads_psite_list,
                                   annotation_table,
                                   sample = sp,
-                                  fastapath = "~/Documents/riboseq/2022_Pygo2_KD_Mitosis_riboseq_1st/reference/GRCh38.p13.genome.fa",
+                                  fastapath = "~/Documents/reference/GRCh38.p13.genome.fa",
                                   fasta_genome = TRUE,
-                                  gtfpath = "~/Documents/riboseq/2022_Pygo2_KD_Mitosis_riboseq_1st/reference/gencode.v43.chr_patch_hapl_scaff.annotation.gtf",
+                                  gtfpath = "~/Documents/reference/gencode.v43.chr_patch_hapl_scaff.annotation.gtf",
                                   frequency_normalization = TRUE,
                                   refseq_sep = " ")
   
