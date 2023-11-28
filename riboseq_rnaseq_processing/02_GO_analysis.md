@@ -10,8 +10,4 @@ author: "Daeho Joe, Seunghee Jung"
 
 ## ClusterProfiler
 
-With clusterProfiler you can explore functional characteristics of both coding and non-coding genomics data for thousands of species with up-to-date gene annotation. (Introduction by [YuLab](https://github.com/YuLab-SMU/clusterProfiler))
-
-We applied clusterProfiler GO analysis on every gene set (exclusive, buffered, intensified, ) on biological process.
-
-
+With clusterProfiler you can explore functional characteristics of both coding and non-coding genomics data for thousands of species with up-to-date gene annotation. (Introduction by [YuLab](https://github.com/YuLab-SMU/clusterProfiler)). We applied GO analysis using clusterProfiler and enrichR on every gene set on biological process, and visualized them using dotplot and chorddiagram.  
