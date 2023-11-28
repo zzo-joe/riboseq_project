@@ -70,7 +70,7 @@ ggplot(GO_combined,
 
 #### Chorddiagram was generatd by following code.
 ```r
-df<- read.csv("TE_GO.csv", check.names = F, header = T)
+df <- read.csv("TE_GO.csv", check.names = F, header = T)
 df <- df[order(df$FoldChange, decreasing = T),]
 group <- c(unique(df$categoryID),
            unique(df$Gene))
