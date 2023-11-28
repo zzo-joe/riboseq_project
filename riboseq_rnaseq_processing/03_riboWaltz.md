@@ -35,7 +35,7 @@ reads_list <- bamtolist(bamfolder = "transcript_bam/",
                         refseq_sep = " ")
 ```  
 
-#### Data filtering
+#### Data filtering and visualization
 ```r
 filtered_list <- length_filter(data = filtered_list,
                                length_filter_mode = "custom",
