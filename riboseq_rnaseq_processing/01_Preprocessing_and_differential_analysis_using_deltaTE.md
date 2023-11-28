@@ -64,7 +64,7 @@ Explaination credit: [SGDDNB github](https://github.com/SGDDNB/translational_reg
 
 Calculating differential translation genes (DTGs) requires the count matrices from Ribo-seq and RNA-seq. These should be the raw counts obtained from feature counts or any other tool for counting reads, they should not be normalized or batch corrected. It also requires a sample information file which should be in the same order as samples in the count matrices. It should include information on sequencing type, treatment, batch or any other covariate you need to model.
 
-We obtained countdata table from featureCounts output by following code:
+We obtained countdata table from featureCounts and used as input.
 
 ```r
 ## Import riboseq featurecounts results
