@@ -93,7 +93,7 @@ df <- df[order(df$FoldChange, decreasing = T),]
 group <- c(unique(df$categoryID),
            unique(df$Gene))
 
-# Preparing legends
+## prepare legends
 df_lg <- df %>%
   arrange(desc(FoldChange)) %>%
   .[, c("Gene", "FoldChange")] %>%
@@ -104,18 +104,16 @@ normalized_values <- (values - min(values)) / (max(values) - min(values))
 color_palette <- colorRampPalette(c("#EEE9CE", "#C39B6B"))(100)
 matched_colors <- color_palette[round(normalized_values * 99) + 1]
 
-# Setting colors
+## set colors
 mycolors <- c(colorRampPalette(rev(c("#B64F4A", "#C39B6B", "#CBC7B1", "#8AB0A2", "#326482")))(length(unique(df$categoryID))),
               c(rev(matched_colors)))
 
 names(mycolors) <- group
 
-## plotting
-circos.par(## edit  canvas size 
+## start plotting
+circos.par(
   canvas.ylim=c(-1.1, 1.1),
   canvas.xlim=c(-0.5, 1.1),
-  ## adjust bottom and top margin
-  ## track.margin = c(0.01, 0.1)
   track.margin = c(0.01, 0.01),
   track.height = 0.05,
   start.degree = 90)
@@ -132,7 +130,7 @@ cd <- chordDiagram(df[1:2],
                    
 )
 
-# gene label
+## gene label
 circos.track(track.index = 2, panel.fun = function(x, y) {
   circos.text(CELL_META$xcenter,
               CELL_META$ylim[1],
@@ -145,7 +143,7 @@ circos.track(track.index = 2, panel.fun = function(x, y) {
 
 
 
-# add legend
+## add legend
 min.value <- min(df$FoldChange, na.rm = TRUE)
 max.value <- max(df$FoldChange, na.rm = TRUE)
 
@@ -166,7 +164,6 @@ legend_FC <- Legend(title = colnames(df[4]),
                     direction = "horizontal",
                     title_gp = gpar(fontface = "plain",
                                     fontsize = 9.5),
-                    # grid_with = unit(1, "cm"),
                     legend_width = unit(5, "cm"))
 
 h = dev.size()[2]
