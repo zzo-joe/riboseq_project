@@ -1,4 +1,4 @@
-# CDK1/S6K1-PYGO2 axis regulates eIF3D-dependent translational initiation during mitosis
+# CDK1/S6K1-PYGO2 axis regulates mitotic progression through promoting translation initiation  
 | Title | Authors | DOI | GEO |
 :----------|:-------------|:----------|:----------|
 | CDK1/S6K1-PYGO2 axis regulates eIF3D-dependent translational initiation during mitosis | Min Gyu Lee, Hwamok Oh, Daeho Joe, Jaecheol Lee*, Jeung-Whan Han* | |  |
